@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Fishing Game</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Segoe UI', sans-serif;
+            user-select: none;
+        }
+
+        #instructions {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        #ui-layer {
+            pointer-events: none;
+            position: absolute;
+            inset: 0;
+        }
+
+        .hud-element {
+            position: absolute;
+            color: white;
+            text-shadow: 1px 1px 2px black;
+            pointer-events: auto;
+        }
+
+        /* Crosshair */
+        #crosshair {
+            top: 50%;
+            left: 50%;
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+
+        /* Power Bar */
+        #power-bar-container {
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 20px;
+            background: #333;
+            border: 2px solid white;
+            display: none;
+        }
+
+        #power-bar-fill {
+            width: 0%;
+            height: 100%;
+            background: lime;
+        }
+
+        /* Stats */
+        #stats {
+            top: 10px;
+            left: 10px;
+            font-size: 20px;
+        }
+
+        /* Modals */
+        .modal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(20, 20, 30, 0.95);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #4a90e2;
+            display: none;
+            flex-direction: column;
+            gap: 15px;
+            min-width: 300px;
+            pointer-events: auto;
+            z-index: 20;
+        }
+
+        .modal h2 {
+            margin: 0 0 10px 0;
+            border-bottom: 1px solid #555;
+            padding-bottom: 10px;
+        }
+
+        .item-list {
+            max-height: 200px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+        }
+
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px;
+            border-bottom: 1px solid #444;
+        }
+
+        button {
+            background: #4a90e2;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #357abd;
+        }
+
+        /* Notification */
+        #notification {
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 20px;
+            opacity: 0;
+            transition: opacity 0.5s;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        /* Help Key */
+        #controls-hint {
+            bottom: 10px;
+            right: 10px;
+            font-size: 14px;
+            opacity: 0.7;
+        }
+    </style>
+    <!-- Import Map for Three.js -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <div id="instructions">
+        <h1>Three.js Fishing Game</h1>
+        <p>Click to Start</p>
+        <p>WASD to Move | Mouse to Look</p>
+        <p>Hold LEFT CLICK to Cast</p>
+    </div>
+
+    <div id="ui-layer">
+        <div id="crosshair" class="hud-element"></div>
+        <div id="stats" class="hud-element">Fish: <span id="fish-count">0</span> | Money: <span
+                id="money-count">$0</span></div>
+        <div id="power-bar-container" class="hud-element">
+            <div id="power-bar-fill"></div>
+        </div>
+        <div id="notification" class="hud-element"></div>
+        <div id="controls-hint" class="hud-element">[I] Inventory | [B] Shop</div>
+    </div>
+
+    <!-- Inventory Modal -->
+    <div id="inventory-modal" class="modal">
+        <h2>Inventory</h2>
+        <div id="inventory-list" class="item-list">
+            <p style="text-align: center; opacity: 0.5;">No fish yet.</p>
+        </div>
+        <button id="btn-close-inv">Close</button>
+    </div>
+
+    <!-- Shop Modal -->
+    <div id="shop-modal" class="modal">
+        <h2>Fish Market</h2>
+        <p>Sell your catch for money!</p>
+        <div id="shop-list" class="item-list"></div>
+        <button id="btn-sell-all">Sell All ($<span id="sell-value">0</span>)</button>
+        <button id="btn-close-shop">Close</button>
+    </div>
+
+    <script type="module" src="./src/main.js"></script>
+</body>
+
+</html>

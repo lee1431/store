@@ -1,0 +1,4 @@
+/* Basic cleanup, mostly handled in index.html head for now */
+canvas {
+    display: block;
+}
